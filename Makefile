@@ -3,7 +3,7 @@ CC=gcc
 CFLAGS=-Wall -Wextra
 LDFLAGS=
 
-OBJ_FILES=main.c.o
+OBJ_FILES=main.c.o bresenham.c.o
 OBJS=$(addprefix obj/, $(OBJ_FILES))
 
 BIN=raycasting.out
