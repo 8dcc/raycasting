@@ -5,8 +5,8 @@
  */
 
 #include <stdint.h>
-#include "include/bresenham.h"
 #include "include/main.h"
+#include "include/bresenham.h"
 
 static void bresenham_x(int x0, int y0, int x1, int y1) {
     int dx = x1 - x0;

@@ -1,7 +1,7 @@
 
 CC=gcc
 CFLAGS=-Wall -Wextra
-LDFLAGS=
+LDFLAGS=-lSDL2
 
 OBJ_FILES=main.c.o bresenham.c.o
 OBJS=$(addprefix obj/, $(OBJ_FILES))

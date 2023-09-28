@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define ARR_H 20
-#define ARR_W 20
+#define ARR_H 100
+#define ARR_W 100
 
 /* Values 0..255 represent brightness of each cell */
 extern uint8_t arr[ARR_H * ARR_W];
