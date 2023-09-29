@@ -6,6 +6,7 @@
 #include "include/main.h"
 #include "include/bresenham.h"
 #include "include/raycast.h"
+#include "include/rotation.h"
 
 #define FPS   30
 #define SCALE 2
@@ -26,25 +27,32 @@ int main() {
     for (int y = 15; y < 35; y++)
         arr[y * ARR_W + 20] = 255;
 
-    const int center_y = ARR_H / 2;
-    const int center_x = ARR_W / 2;
+    /* Light source */
+    const vec2_t center = {
+        .x = ARR_W / 2,
+        .y = ARR_H / 2,
+    };
 
     /* Cast rays from center to all sides (360) */
-    int cast_x, cast_y;
+    vec2_t cast;
     for (int y = 0; y < ARR_H; y++) {
-        raycast_line(center_x, center_y, 0, y, &cast_x, &cast_y);
-        bresenham_line(center_x, center_y, cast_x, cast_y);
+        vec2_t tmp0 = { 0, y };
+        raycast_line(center, tmp0, &cast);
+        bresenham_line(center, cast);
 
-        raycast_line(center_x, center_y, ARR_W - 1, y, &cast_x, &cast_y);
-        bresenham_line(center_x, center_y, cast_x, cast_y);
+        vec2_t tmp1 = { ARR_W - 1, y };
+        raycast_line(center, tmp1, &cast);
+        bresenham_line(center, cast);
     }
 
     for (int x = 0; x < ARR_W; x++) {
-        raycast_line(center_x, center_y, x, 0, &cast_x, &cast_y);
-        bresenham_line(center_x, center_y, cast_x, cast_y);
+        vec2_t tmp0 = { x, 0 };
+        raycast_line(center, tmp0, &cast);
+        bresenham_line(center, cast);
 
-        raycast_line(center_x, center_y, x, ARR_H - 1, &cast_x, &cast_y);
-        bresenham_line(center_x, center_y, cast_x, cast_y);
+        vec2_t tmp1 = { x, ARR_H - 1 };
+        raycast_line(center, tmp1, &cast);
+        bresenham_line(center, cast);
     }
 
     /*------------------------------------------------------------------------*/

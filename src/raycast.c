@@ -6,32 +6,31 @@
  *
  * These functions are different from the line drawing ones because in there we
  * don't care about the direction of the line (left to right == right to left)
- * but in here we always want to start from the origin (x0,y0) to the
- * destination (x1,y1).
+ * but in here we always want to start from A to B.
  */
 
 #include <stdint.h>
 #include "include/main.h"
 #include "include/raycast.h"
 
-static void raycast_x(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
-    int dx = (x1 > x0) ? x1 - x0 : x0 - x1;
-    int dy = (y1 > y0) ? y1 - y0 : y0 - y1;
+static void raycast_x(vec2_t a, vec2_t b, vec2_t* out) {
+    int dx = (b.x > a.x) ? b.x - a.x : a.x - b.x;
+    int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
 
-    int x_step = (x1 > x0) ? 1 : -1;
-    int y_step = (y1 > y0) ? 1 : -1;
+    int x_step = (b.x > a.x) ? 1 : -1;
+    int y_step = (b.y > a.y) ? 1 : -1;
 
     int diff = 2 * dy - dx;
 
     /* Previous point before hitting wall */
-    int ray_x = *out_x;
-    int ray_y = *out_y;
+    int ray_x = out->x;
+    int ray_y = out->y;
 
-    int y = y0;
-    for (int x = x0; (x1 > x0) ? x <= x1 : x >= x1; x += x_step) {
+    int y = a.y;
+    for (int x = a.x; (b.x > a.x) ? x <= b.x : x >= b.x; x += x_step) {
         if (arr[y * ARR_W + x] == 255) {
-            *out_x = ray_x;
-            *out_y = ray_y;
+            out->x = ray_x;
+            out->y = ray_y;
             return;
         }
 
@@ -48,24 +47,24 @@ static void raycast_x(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
     }
 }
 
-static void raycast_y(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
-    int dx = (x1 > x0) ? x1 - x0 : x0 - x1;
-    int dy = (y1 > y0) ? y1 - y0 : y0 - y1;
+static void raycast_y(vec2_t a, vec2_t b, vec2_t* out) {
+    int dx = (b.x > a.x) ? b.x - a.x : a.x - b.x;
+    int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
 
-    int x_step = (x1 > x0) ? 1 : -1;
-    int y_step = (y1 > y0) ? 1 : -1;
+    int x_step = (b.x > a.x) ? 1 : -1;
+    int y_step = (b.y > a.y) ? 1 : -1;
 
     int diff = 2 * dx - dy;
 
     /* Previous point before hitting wall */
-    int ray_x = *out_x;
-    int ray_y = *out_y;
+    int ray_x = out->x;
+    int ray_y = out->y;
 
-    int x = x0;
-    for (int y = y0; (y1 > y0) ? y <= y1 : y >= y1; y += y_step) {
+    int x = a.x;
+    for (int y = a.y; (b.y > a.y) ? y <= b.y : y >= b.y; y += y_step) {
         if (arr[y * ARR_W + x] == 255) {
-            *out_x = ray_x;
-            *out_y = ray_y;
+            out->x = ray_x;
+            out->y = ray_y;
             return;
         }
 
@@ -82,10 +81,10 @@ static void raycast_y(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
     }
 }
 
-void raycast_line(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
+void raycast_line(vec2_t a, vec2_t b, vec2_t* out) {
     /* Default output if it doesn't hit a wall */
-    *out_x = x1;
-    *out_y = y1;
+    out->x = b.x;
+    out->y = b.y;
 
     /*
      * The raycast_x function will be used for angles from +45º to -45º
@@ -109,8 +108,8 @@ void raycast_line(int x0, int y0, int x1, int y1, int* out_x, int* out_y) {
      *          /...\
      * (-135º) /.....\ (-45º)
      */
-    if (ABS(y1 - y0) < ABS(x1 - x0))
-        raycast_x(x0, y0, x1, y1, out_x, out_y);
+    if (ABS(b.y - a.y) < ABS(b.x - a.x))
+        raycast_x(a, b, out);
     else
-        raycast_y(x0, y0, x1, y1, out_x, out_y);
+        raycast_y(a, b, out);
 }
