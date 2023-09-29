@@ -21,7 +21,10 @@ static void die(char* s) {
 int main() {
     /* NOTE: Test walls */
     for (int x = 20; x < 60; x++)
-        arr[16 * ARR_W + x] = 255;
+        arr[15 * ARR_W + x] = 255;
+
+    for (int y = 15; y < 35; y++)
+        arr[y * ARR_W + 20] = 255;
 
     const int center_y = ARR_H / 2;
     const int center_x = ARR_W / 2;
