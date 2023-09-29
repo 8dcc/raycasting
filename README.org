@@ -3,12 +3,17 @@
 #+startup: showeverything
 #+author: 8dcc
 
-*WIP.*
+*Simple program for simulating raycasting in SDL.*
 
 #+TOC: headlines 2
 
 * Description
-WIP.
+The program currently uses raycasting to simulate lightning in a two-dimensional
+plane.
+
+#+begin_quote
+*Note:* This project is still work in progress.
+#+end_quote
 
 * Building
 
@@ -23,4 +28,5 @@ $ make
 
 #+begin_src console
 $ ./raycasting.out
+Press <Esc> or <q> to exit...
 #+end_src
