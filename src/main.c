@@ -18,8 +18,32 @@ static void die(char* s) {
 }
 
 int main() {
-    /* TODO */
-    bresenham_line(10, 10, 80, 60);
+    /* NOTE: Test walls */
+    for (int x = 5; x < 30; x++)
+        arr[5 * ARR_W + x] = 255;
+
+    const int center_y = ARR_H / 2;
+    const int center_x = ARR_W / 2;
+
+    /* Cast rays from center to all sides (360) */
+    int cast_x, cast_y;
+    for (int y = 0; y < ARR_H; y++) {
+        raycast_line(center_x, center_y, 0, y, &cast_x, &cast_y);
+        bresenham_line(center_x, center_y, cast_x, cast_y);
+
+        raycast_line(center_x, center_y, ARR_W - 1, y, &cast_x, &cast_y);
+        bresenham_line(center_x, center_y, cast_x, cast_y);
+    }
+
+    for (int x = 0; x < ARR_W; x++) {
+        raycast_line(center_x, center_y, x, 0, &cast_x, &cast_y);
+        bresenham_line(center_x, center_y, cast_x, cast_y);
+
+        raycast_line(center_x, center_y, x, ARR_H - 1, &cast_x, &cast_y);
+        bresenham_line(center_x, center_y, cast_x, cast_y);
+    }
+
+    /*------------------------------------------------------------------------*/
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         die("Unable to start SDL");
@@ -78,7 +102,6 @@ int main() {
                 const uint8_t val = arr[y * ARR_W + x];
                 SDL_SetRenderDrawColor(sdl_renderer, val, val, val, 255);
 
-#if 1
                 /* Draw SCALE*SCALE rectangle */
                 SDL_Rect rect = {
                     .x = x * SCALE,
@@ -88,13 +111,6 @@ int main() {
                 };
 
                 SDL_RenderFillRect(sdl_renderer, &rect);
-
-#else
-                for (int i = 0; i < SCALE; i++)
-                    for (int j = 0; j < SCALE; j++)
-                        SDL_RenderDrawPoint(sdl_renderer, x * SCALE + j,
-                                            y * SCALE + i);
-#endif
             }
         }
 
