@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define ABS(n) ((n) < 0 ? (-(n)) : (n))
+
 #define ARR_H 99
 #define ARR_W 99
 

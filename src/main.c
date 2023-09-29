@@ -5,6 +5,7 @@
 #include "SDL2/SDL.h"
 #include "include/main.h"
 #include "include/bresenham.h"
+#include "include/raycast.h"
 
 #define FPS   30
 #define SCALE 2
