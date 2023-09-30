@@ -10,6 +10,14 @@
 void bresenham_line(vec2_t a, vec2_t b);
 
 /**
+ * @brief Cast a ray from start to end, and draw a line to the returned value
+ * @details Uses the raycast() function
+ * @param[in] start Start of ray
+ * @param[in] end End of ray
+ */
+void draw_raycast(vec2_t start, vec2_t end);
+
+/**
  * @brief Draws an angle cone of X degrees from an origin to another point
  * @param[in] deg Angle to draw in degrees, not radians
  * @param[in] vertex Vertex of the angle

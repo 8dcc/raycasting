@@ -19,11 +19,6 @@ static void die(char* s) {
     exit(1);
 }
 
-static inline void draw_raycast(vec2_t start, vec2_t end) {
-    vec2_t cast = raycast_line(start, end);
-    bresenham_line(start, cast);
-}
-
 /* Ran each frame before rendering arr */
 static void draw_loop(void) {
     static float ang = 1.f;

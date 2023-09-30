@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "include/main.h"
 #include "include/bresenham.h"
+#include "include/raycast.h"
 #include "include/rotation.h"
 
 static void bresenham_x(vec2_t a, vec2_t b) {
@@ -63,6 +64,11 @@ void bresenham_line(vec2_t a, vec2_t b) {
         else
             bresenham_y(b, a);
     }
+}
+
+void draw_raycast(vec2_t start, vec2_t end) {
+    vec2_t cast = raycast(start, end);
+    bresenham_line(start, cast);
 }
 
 #define DRAW_ANGLE_STEP DEG2RAD(1.f)
