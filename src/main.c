@@ -8,7 +8,7 @@
 #include "include/raycast.h"
 #include "include/rotation.h"
 
-#define FPS   30
+#define FPS   60
 #define SCALE 2
 
 uint8_t arr[ARR_H * ARR_W] = { 0 };
@@ -24,27 +24,45 @@ static inline void draw_raycast(vec2_t start, vec2_t end) {
     bresenham_line(start, cast);
 }
 
-int main() {
-    /* NOTE: Test walls */
-    for (int x = 20; x < 60; x++)
-        arr[15 * ARR_W + x] = 255;
-
-    for (int y = 15; y < 35; y++)
-        arr[y * ARR_W + 20] = 255;
+/* Ran each frame before rendering arr */
+static void draw_loop(void) {
+    static float ang = 1.f;
 
     /* Light source */
-    const vec2_t eyes = {
+    static const vec2_t eyes = {
         .x = ARR_W / 2,
         .y = ARR_H / 2,
     };
 
     /* Center of FOV */
-    const vec2_t view = {
-        .x = 20,
-        .y = 20,
+    static const vec2_t view = {
+        .x = ARR_W - 5,
+        .y = ARR_H / 2,
     };
 
-    draw_angle(FOV, eyes, view);
+    /* Clear */
+    for (int y = 0; y < ARR_H; y++)
+        for (int x = 0; x < ARR_W; x++)
+            set_val(y, x, 0);
+
+    /* NOTE: Test walls */
+    for (int x = 50; x < 90; x++)
+        set_val(35, x, 255);
+    for (int y = 35; y < 55; y++)
+        set_val(y, 50, 255);
+
+    ang = (ang > 360.f) ? 0.f : ang + 1;
+
+#if 0
+    draw_angle(ang, eyes, view);
+#else
+    vec2_t tmp = rotate_rel(DEG2RAD(ang), eyes, view);
+    draw_raycast(eyes, tmp);
+
+    /* TODO: Use raycasting when drawing angle. You can't just use draw_raycast
+     * because it would leave gaps. */
+    /* draw_angle(FOV, eyes, tmp); */
+#endif
 
 #if 0
     vec2_t fov_start = rotate_rel(DEG2RAD(FOV / 2), eyes, view);
@@ -64,9 +82,9 @@ int main() {
         draw_raycast(eyes, (vec2_t){ x, ARR_H - 1 });
     }
 #endif
+}
 
-    /*------------------------------------------------------------------------*/
-
+int main() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         die("Unable to start SDL");
 
@@ -117,7 +135,10 @@ int main() {
             }
         }
 
-        /* Iterate line array */
+        /* Make changes to global array */
+        draw_loop();
+
+        /* Iterate global array */
         for (int y = 0; y < ARR_H; y++) {
             for (int x = 0; x < ARR_W; x++) {
                 const uint8_t val = arr[y * ARR_W + x];

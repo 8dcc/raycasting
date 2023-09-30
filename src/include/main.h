@@ -16,8 +16,8 @@
 #define CLAMP(VAL, MIN, MAX) \
     (((VAL) > (MAX)) ? (MAX) : (((VAL) < (MIN)) ? (MIN) : (VAL)))
 
-#define ARR_H 99
-#define ARR_W 99
+#define ARR_H 199
+#define ARR_W 199
 
 #define FOV 90.f
 
