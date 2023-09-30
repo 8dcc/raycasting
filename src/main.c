@@ -6,7 +6,6 @@
 #include "include/main.h"
 #include "include/bresenham.h"
 #include "include/raycast.h"
-#include "include/rotation.h"
 
 #define FPS   30
 #define SCALE 2
