@@ -10,6 +10,9 @@
 #include "include/raycast.h"
 #include "include/rotation.h"
 
+/* Used by draw_angle() and modified by draw_raycast_angle() wrapper */
+drawfunc_t draw_line = bresenham_line;
+
 static void bresenham_x(vec2_t a, vec2_t b, color_t col) {
     int dx = b.x - a.x;
     int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
@@ -85,9 +88,11 @@ void draw_angle(float deg, vec2_t vertex, vec2_t ang_center, color_t col) {
     /* Rotate until we reach the end */
     float rotated = 0.f;
     while (rotated < target_rad) {
+        /* FIXME: Remove gaps between lines */
         /* Draw current line of the angle.
-         * TODO: Draw rectangles to fill empty points */
-        bresenham_line(vertex, cur, col);
+         * NOTE: draw_line is a function pointer set in bresenham.h and modified
+         * temporarily by draw_raycast_angle() */
+        draw_line(vertex, cur, col);
 
         /* Rotate by STEP until we get a different point */
         while (cur.x == prev.x && cur.y == prev.y) {

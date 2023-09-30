@@ -41,10 +41,12 @@ static void draw_loop(void) {
             set_val(y, x, 0);
 
     /* NOTE: Test walls */
-    for (int x = 50; x < 90; x++)
+    for (int x = 50; x < 85; x++)
         set_val(35, x, 255);
     for (int y = 35; y < 55; y++)
         set_val(y, 50, 255);
+    for (int y = 120; y < 140; y++)
+        set_val(y, 170, 255);
 
 #if 0
     const color_t light_col = 50;
@@ -61,17 +63,13 @@ static void draw_loop(void) {
     }
 #endif
 
-    ang = (ang > 360.f) ? 0.f : ang + 1;
+    ang        = (ang > 360.f) ? 0.f : ang + 1;
+    vec2_t tmp = rotate_rel(DEG2RAD(ang), eyes, view);
 
 #if 0
-    draw_angle(ang, eyes, view, 150);
-#else
-    vec2_t tmp = rotate_rel(DEG2RAD(ang), eyes, view);
     draw_raycast(eyes, tmp, 150);
-
-    /* TODO: Use raycasting when drawing angle. You can't just use draw_raycast
-     * because it would leave gaps. */
-    /* draw_angle(FOV, eyes, tmp, 150); */
+#else
+    draw_raycast_angle(FOV, eyes, tmp, 150);
 #endif
 }
 

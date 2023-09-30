@@ -17,6 +17,10 @@ void bresenham_line(vec2_t a, vec2_t b, color_t col);
  */
 void draw_raycast(vec2_t start, vec2_t end, color_t col);
 
+/* Declared in bresenham.c */
+typedef void (*drawfunc_t)(vec2_t a, vec2_t b, color_t col);
+extern drawfunc_t draw_line;
+
 /**
  * @brief Draws an angle cone of X degrees from an origin to another point
  * @param[in] deg Angle to draw in degrees, not radians
@@ -24,5 +28,13 @@ void draw_raycast(vec2_t start, vec2_t end, color_t col);
  * @param[in] ang_center The position at the center of the angle
  */
 void draw_angle(float deg, vec2_t vertex, vec2_t ang_center, color_t col);
+
+static inline void draw_raycast_angle(float deg, vec2_t vertex,
+                                      vec2_t ang_center, color_t col) {
+    drawfunc_t old = draw_line;
+    draw_line      = draw_raycast;
+    draw_angle(deg, vertex, ang_center, col);
+    draw_line = old;
+}
 
 #endif /* BRESENHAM_H_ */
