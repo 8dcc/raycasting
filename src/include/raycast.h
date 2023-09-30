@@ -8,6 +8,6 @@
  * @param[in] b End of the ray
  * @return If it hits a wall, the position before hitting it. Otherwise, B.
  */
-vec2_t raycast_line(vec2_t a, vec2_t b);
+vec2_t raycast(vec2_t a, vec2_t b);
 
 #endif /* RAYCAST_H_ */

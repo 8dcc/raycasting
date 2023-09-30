@@ -87,7 +87,7 @@ static vec2_t raycast_y(vec2_t a, vec2_t b) {
     return b;
 }
 
-vec2_t raycast_line(vec2_t a, vec2_t b) {
+vec2_t raycast(vec2_t a, vec2_t b) {
     /*
      * The raycast_x function will be used for angles from +45º to -45º
      * and from +135º to -135º:
