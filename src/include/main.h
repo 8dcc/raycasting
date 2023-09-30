@@ -25,18 +25,20 @@ typedef struct {
     int32_t x, y;
 } vec2_t;
 
+typedef uint8_t color_t;
+
 /**
  * @var arr
  * @brief Global array. Values 0..255 represent brightness of each cell
  */
-extern uint8_t arr[ARR_H * ARR_W];
+extern color_t arr[ARR_H * ARR_W];
 
 /**
  * @brief Set a value inside the global array
  * @param[in] y, x Position
  * @param[in] val Value from 0 to 255
  */
-static inline void set_val(int y, int x, uint8_t val) {
+static inline void set_val(int y, int x, color_t val) {
 #ifdef DEBUG
     if (y >= ARR_H || x >= ARR_W)
         fprintf(stderr, "set_val: Writing out of bounds (%d, %d)\n", y, x);

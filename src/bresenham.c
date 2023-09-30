@@ -10,7 +10,7 @@
 #include "include/raycast.h"
 #include "include/rotation.h"
 
-static void bresenham_x(vec2_t a, vec2_t b) {
+static void bresenham_x(vec2_t a, vec2_t b, color_t col) {
     int dx = b.x - a.x;
     int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
 
@@ -19,8 +19,7 @@ static void bresenham_x(vec2_t a, vec2_t b) {
 
     int y = a.y;
     for (int x = a.x; x <= b.x; x++) {
-        /* TODO: Color parameter */
-        set_val(y, x, 100);
+        set_val(y, x, col);
 
         if (diff > 0) {
             diff += 2 * (dy - dx);
@@ -31,7 +30,7 @@ static void bresenham_x(vec2_t a, vec2_t b) {
     }
 }
 
-static void bresenham_y(vec2_t a, vec2_t b) {
+static void bresenham_y(vec2_t a, vec2_t b, color_t col) {
     int dx = (b.x > a.x) ? b.x - a.x : a.x - b.x;
     int dy = b.y - a.y;
 
@@ -40,8 +39,7 @@ static void bresenham_y(vec2_t a, vec2_t b) {
 
     int x = a.x;
     for (int y = a.y; y <= b.y; y++) {
-        /* TODO: Color parameter */
-        set_val(y, x, 100);
+        set_val(y, x, col);
 
         if (diff > 0) {
             diff += 2 * (dx - dy);
@@ -52,28 +50,28 @@ static void bresenham_y(vec2_t a, vec2_t b) {
     }
 }
 
-void bresenham_line(vec2_t a, vec2_t b) {
+void bresenham_line(vec2_t a, vec2_t b, color_t col) {
     if (ABS(b.y - a.y) < ABS(b.x - a.x)) {
         if (b.x >= a.x)
-            bresenham_x(a, b);
+            bresenham_x(a, b, col);
         else
-            bresenham_x(b, a);
+            bresenham_x(b, a, col);
     } else {
         if (b.y >= a.y)
-            bresenham_y(a, b);
+            bresenham_y(a, b, col);
         else
-            bresenham_y(b, a);
+            bresenham_y(b, a, col);
     }
 }
 
-void draw_raycast(vec2_t start, vec2_t end) {
+void draw_raycast(vec2_t start, vec2_t end, color_t col) {
     vec2_t cast = raycast(start, end);
-    bresenham_line(start, cast);
+    bresenham_line(start, cast, col);
 }
 
-#define DRAW_ANGLE_STEP DEG2RAD(1.f)
+#define DRAW_ANGLE_STEP DEG2RAD(0.1f)
 
-void draw_angle(float deg, vec2_t vertex, vec2_t ang_center) {
+void draw_angle(float deg, vec2_t vertex, vec2_t ang_center, color_t col) {
     /* Start and end points of our angle */
     vec2_t start = rotate_rel(DEG2RAD(-(deg / 2)), vertex, ang_center);
 
@@ -89,7 +87,7 @@ void draw_angle(float deg, vec2_t vertex, vec2_t ang_center) {
     while (rotated < target_rad) {
         /* Draw current line of the angle.
          * TODO: Draw rectangles to fill empty points */
-        bresenham_line(vertex, cur);
+        bresenham_line(vertex, cur, col);
 
         /* Rotate by STEP until we get a different point */
         while (cur.x == prev.x && cur.y == prev.y) {

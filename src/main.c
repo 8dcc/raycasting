@@ -46,36 +46,32 @@ static void draw_loop(void) {
     for (int y = 35; y < 55; y++)
         set_val(y, 50, 255);
 
-    ang = (ang > 360.f) ? 0.f : ang + 1;
-
 #if 0
-    draw_angle(ang, eyes, view);
-#else
-    vec2_t tmp = rotate_rel(DEG2RAD(ang), eyes, view);
-    draw_raycast(eyes, tmp);
-
-    /* TODO: Use raycasting when drawing angle. You can't just use draw_raycast
-     * because it would leave gaps. */
-    /* draw_angle(FOV, eyes, tmp); */
-#endif
-
-#if 0
-    vec2_t fov_start = rotate_rel(DEG2RAD(FOV / 2), eyes, view);
-    vec2_t fov_end   = rotate_rel(DEG2RAD(-(FOV / 2)), eyes, view);
-    draw_raycast(eyes, view);
-    draw_raycast(eyes, fov_start);
-    draw_raycast(eyes, fov_end);
+    const color_t light_col = 50;
 
     /* Cast rays from eyes to all sides (360) */
     for (int y = 0; y < ARR_H; y++) {
-        draw_raycast(eyes, (vec2_t){ 0, y });
-        draw_raycast(eyes, (vec2_t){ ARR_W - 1, y });
+        draw_raycast(eyes, (vec2_t){ 0, y }, light_col);
+        draw_raycast(eyes, (vec2_t){ ARR_W - 1, y }, light_col);
     }
 
     for (int x = 0; x < ARR_W; x++) {
-        draw_raycast(eyes, (vec2_t){ x, 0 });
-        draw_raycast(eyes, (vec2_t){ x, ARR_H - 1 });
+        draw_raycast(eyes, (vec2_t){ x, 0 }, light_col);
+        draw_raycast(eyes, (vec2_t){ x, ARR_H - 1 }, light_col);
     }
+#endif
+
+    ang = (ang > 360.f) ? 0.f : ang + 1;
+
+#if 0
+    draw_angle(ang, eyes, view, 150);
+#else
+    vec2_t tmp = rotate_rel(DEG2RAD(ang), eyes, view);
+    draw_raycast(eyes, tmp, 150);
+
+    /* TODO: Use raycasting when drawing angle. You can't just use draw_raycast
+     * because it would leave gaps. */
+    /* draw_angle(FOV, eyes, tmp, 150); */
 #endif
 }
 
