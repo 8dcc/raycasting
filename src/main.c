@@ -19,6 +19,12 @@ static void die(char* s) {
     exit(1);
 }
 
+static inline void draw_raycast(vec2_t start, vec2_t end) {
+    vec2_t cast;
+    raycast_line(start, end, &cast);
+    bresenham_line(start, cast);
+}
+
 int main() {
     /* NOTE: Test walls */
     for (int x = 20; x < 60; x++)
@@ -28,32 +34,39 @@ int main() {
         arr[y * ARR_W + 20] = 255;
 
     /* Light source */
-    const vec2_t center = {
+    const vec2_t orig = {
         .x = ARR_W / 2,
         .y = ARR_H / 2,
     };
 
-    /* Cast rays from center to all sides (360) */
-    vec2_t cast;
-    for (int y = 0; y < ARR_H; y++) {
-        vec2_t tmp0 = { 0, y };
-        raycast_line(center, tmp0, &cast);
-        bresenham_line(center, cast);
+    /* Center of FOV */
+    const vec2_t view = {
+        .x = 20,
+        .y = 20,
+    };
 
-        vec2_t tmp1 = { ARR_W - 1, y };
-        raycast_line(center, tmp1, &cast);
-        bresenham_line(center, cast);
+    vec2_t fov_start;
+    rotate_rel(DEG2RAD(FOV / 2), orig, view, &fov_start);
+
+    vec2_t fov_end;
+    rotate_rel(DEG2RAD(-(FOV / 2)), orig, view, &fov_end);
+
+    draw_raycast(orig, view);
+    draw_raycast(orig, fov_start);
+    draw_raycast(orig, fov_end);
+
+#if 0
+    /* Cast rays from orig to all sides (360) */
+    for (int y = 0; y < ARR_H; y++) {
+        draw_raycast(orig, (vec2_t){ 0, y });
+        draw_raycast(orig, (vec2_t){ ARR_W - 1, y });
     }
 
     for (int x = 0; x < ARR_W; x++) {
-        vec2_t tmp0 = { x, 0 };
-        raycast_line(center, tmp0, &cast);
-        bresenham_line(center, cast);
-
-        vec2_t tmp1 = { x, ARR_H - 1 };
-        raycast_line(center, tmp1, &cast);
-        bresenham_line(center, cast);
+        draw_raycast(orig, (vec2_t){ x, 0 });
+        draw_raycast(orig, (vec2_t){ x, ARR_H - 1 });
     }
+#endif
 
     /*------------------------------------------------------------------------*/
 
@@ -63,7 +76,6 @@ int main() {
     SDL_Window* sdl_window =
       SDL_CreateWindow("Raycasting", SDL_WINDOWPOS_CENTERED,
                        SDL_WINDOWPOS_CENTERED, ARR_W * SCALE, ARR_H * SCALE, 0);
-
     if (!sdl_window)
         die("Error creating a window");
 

@@ -18,6 +18,8 @@
 #define ARR_H 99
 #define ARR_W 99
 
+#define FOV 90.f
+
 typedef struct {
     int32_t x, y;
 } vec2_t;
