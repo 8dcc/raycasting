@@ -33,7 +33,7 @@ int main() {
         arr[y * ARR_W + 20] = 255;
 
     /* Light source */
-    const vec2_t orig = {
+    const vec2_t eyes = {
         .x = ARR_W / 2,
         .y = ARR_H / 2,
     };
@@ -44,23 +44,24 @@ int main() {
         .y = 20,
     };
 
-    vec2_t fov_start = rotate_rel(DEG2RAD(FOV / 2), orig, view);
-    vec2_t fov_end   = rotate_rel(DEG2RAD(-(FOV / 2)), orig, view);
-
-    draw_raycast(orig, view);
-    draw_raycast(orig, fov_start);
-    draw_raycast(orig, fov_end);
+    draw_angle(FOV, eyes, view);
 
 #if 0
-    /* Cast rays from orig to all sides (360) */
+    vec2_t fov_start = rotate_rel(DEG2RAD(FOV / 2), eyes, view);
+    vec2_t fov_end   = rotate_rel(DEG2RAD(-(FOV / 2)), eyes, view);
+    draw_raycast(eyes, view);
+    draw_raycast(eyes, fov_start);
+    draw_raycast(eyes, fov_end);
+
+    /* Cast rays from eyes to all sides (360) */
     for (int y = 0; y < ARR_H; y++) {
-        draw_raycast(orig, (vec2_t){ 0, y });
-        draw_raycast(orig, (vec2_t){ ARR_W - 1, y });
+        draw_raycast(eyes, (vec2_t){ 0, y });
+        draw_raycast(eyes, (vec2_t){ ARR_W - 1, y });
     }
 
     for (int x = 0; x < ARR_W; x++) {
-        draw_raycast(orig, (vec2_t){ x, 0 });
-        draw_raycast(orig, (vec2_t){ x, ARR_H - 1 });
+        draw_raycast(eyes, (vec2_t){ x, 0 });
+        draw_raycast(eyes, (vec2_t){ x, ARR_H - 1 });
     }
 #endif
 

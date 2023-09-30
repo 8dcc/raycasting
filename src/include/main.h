@@ -2,6 +2,7 @@
 #define MAIN_H_
 
 #include <stdint.h>
+#include <math.h> /* M_PI */
 
 #ifdef DEBUG
 #include <stdio.h>
