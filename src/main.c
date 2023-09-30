@@ -6,6 +6,7 @@
 #include "include/main.h"
 #include "include/bresenham.h"
 #include "include/raycast.h"
+#include "include/rotation.h"
 
 #define FPS   30
 #define SCALE 2
@@ -19,8 +20,7 @@ static void die(char* s) {
 }
 
 static inline void draw_raycast(vec2_t start, vec2_t end) {
-    vec2_t cast;
-    raycast_line(start, end, &cast);
+    vec2_t cast = raycast_line(start, end);
     bresenham_line(start, cast);
 }
 

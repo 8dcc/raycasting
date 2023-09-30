@@ -13,7 +13,9 @@
 #include "include/main.h"
 #include "include/raycast.h"
 
-static void raycast_x(vec2_t a, vec2_t b, vec2_t* out) {
+#define WALL 255
+
+static vec2_t raycast_x(vec2_t a, vec2_t b) {
     int dx = (b.x > a.x) ? b.x - a.x : a.x - b.x;
     int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
 
@@ -23,20 +25,19 @@ static void raycast_x(vec2_t a, vec2_t b, vec2_t* out) {
     int diff = 2 * dy - dx;
 
     /* Previous point before hitting wall */
-    int ray_x = out->x;
-    int ray_y = out->y;
+    vec2_t prev = {
+        .x = a.x,
+        .y = a.y,
+    };
 
     int y = a.y;
     for (int x = a.x; (b.x > a.x) ? x <= b.x : x >= b.x; x += x_step) {
-        if (arr[y * ARR_W + x] == 255) {
-            out->x = ray_x;
-            out->y = ray_y;
-            return;
-        }
+        if (arr[y * ARR_W + x] == WALL)
+            return prev;
 
         /* Save ray position for next iteration */
-        ray_x = x;
-        ray_y = y;
+        prev.x = x;
+        prev.y = y;
 
         if (diff > 0) {
             diff += 2 * (dy - dx);
@@ -45,9 +46,12 @@ static void raycast_x(vec2_t a, vec2_t b, vec2_t* out) {
             diff += 2 * dy;
         }
     }
+
+    /* We reached B without hitting a wall, return it */
+    return b;
 }
 
-static void raycast_y(vec2_t a, vec2_t b, vec2_t* out) {
+static vec2_t raycast_y(vec2_t a, vec2_t b) {
     int dx = (b.x > a.x) ? b.x - a.x : a.x - b.x;
     int dy = (b.y > a.y) ? b.y - a.y : a.y - b.y;
 
@@ -57,20 +61,19 @@ static void raycast_y(vec2_t a, vec2_t b, vec2_t* out) {
     int diff = 2 * dx - dy;
 
     /* Previous point before hitting wall */
-    int ray_x = out->x;
-    int ray_y = out->y;
+    vec2_t prev = {
+        .x = a.x,
+        .y = a.y,
+    };
 
     int x = a.x;
     for (int y = a.y; (b.y > a.y) ? y <= b.y : y >= b.y; y += y_step) {
-        if (arr[y * ARR_W + x] == 255) {
-            out->x = ray_x;
-            out->y = ray_y;
-            return;
-        }
+        if (arr[y * ARR_W + x] == WALL)
+            return prev;
 
         /* Save ray position for next iteration */
-        ray_x = x;
-        ray_y = y;
+        prev.x = x;
+        prev.y = y;
 
         if (diff > 0) {
             diff += 2 * (dx - dy);
@@ -79,13 +82,12 @@ static void raycast_y(vec2_t a, vec2_t b, vec2_t* out) {
             diff += 2 * dx;
         }
     }
+
+    /* We reached B without hitting a wall, return it */
+    return b;
 }
 
-void raycast_line(vec2_t a, vec2_t b, vec2_t* out) {
-    /* Default output if it doesn't hit a wall */
-    out->x = b.x;
-    out->y = b.y;
-
+vec2_t raycast_line(vec2_t a, vec2_t b) {
     /*
      * The raycast_x function will be used for angles from +45º to -45º
      * and from +135º to -135º:
@@ -109,7 +111,7 @@ void raycast_line(vec2_t a, vec2_t b, vec2_t* out) {
      * (-135º) /.....\ (-45º)
      */
     if (ABS(b.y - a.y) < ABS(b.x - a.x))
-        raycast_x(a, b, out);
+        return raycast_x(a, b);
     else
-        raycast_y(a, b, out);
+        return raycast_y(a, b);
 }
