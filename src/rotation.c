@@ -1,3 +1,8 @@
+/**
+ * @file      rotation.c
+ * @brief     Functions for calculating points with rotation matrices
+ * @author    8dcc
+ */
 
 #include "include/main.h"
 #include "include/rotation.h"
@@ -7,12 +12,14 @@
 #define MAX_X (ARR_W - 1)
 #define MAX_Y (ARR_H - 1)
 
-void rotate(float rad_ang, vec2_t in, vec2_t* out) {
-    out->x = in.x * cosf(rad_ang) - in.y * sinf(rad_ang);
-    out->y = in.x * sinf(rad_ang) + in.y * cosf(rad_ang);
+vec2_t rotate(float rad_ang, vec2_t in) {
+    return (vec2_t){
+        .x = in.x * cosf(rad_ang) - in.y * sinf(rad_ang),
+        .y = in.x * sinf(rad_ang) + in.y * cosf(rad_ang),
+    };
 }
 
-void rotate_rel(float rad_ang, vec2_t orig, vec2_t in, vec2_t* out) {
+vec2_t rotate_rel(float rad_ang, vec2_t orig, vec2_t in) {
     /* Subtract in.y from orig.y because more Y means less index in array */
     const vec2_t rel = {
         .x = in.x - orig.x,
@@ -20,13 +27,15 @@ void rotate_rel(float rad_ang, vec2_t orig, vec2_t in, vec2_t* out) {
     };
 
     /* Rotate ralative */
-    rotate(rad_ang, rel, out);
+    vec2_t ret = rotate(rad_ang, rel);
 
     /* Convert back to real array index */
-    out->x = orig.x + out->x;
-    out->y = orig.y - out->y;
+    ret.x = orig.x + ret.x;
+    ret.y = orig.y - ret.y;
 
     /* Clamp to make sure we are in array */
-    out->x = CLAMP(out->x, 0, MAX_X);
-    out->y = CLAMP(out->y, 0, MAX_Y);
+    ret.x = CLAMP(ret.x, 0, MAX_X);
+    ret.y = CLAMP(ret.y, 0, MAX_Y);
+
+    return ret;
 }

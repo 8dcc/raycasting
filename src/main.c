@@ -44,11 +44,8 @@ int main() {
         .y = 20,
     };
 
-    vec2_t fov_start;
-    rotate_rel(DEG2RAD(FOV / 2), orig, view, &fov_start);
-
-    vec2_t fov_end;
-    rotate_rel(DEG2RAD(-(FOV / 2)), orig, view, &fov_end);
+    vec2_t fov_start = rotate_rel(DEG2RAD(FOV / 2), orig, view);
+    vec2_t fov_end   = rotate_rel(DEG2RAD(-(FOV / 2)), orig, view);
 
     draw_raycast(orig, view);
     draw_raycast(orig, fov_start);
