@@ -19,19 +19,19 @@ vec2_t rotate(float rad_ang, vec2_t in) {
     };
 }
 
-vec2_t rotate_rel(float rad_ang, vec2_t orig, vec2_t in) {
-    /* Subtract in.y from orig.y because more Y means less index in array */
+vec2_t rotate_rel(float rad_ang, vec2_t vertex, vec2_t in) {
+    /* Subtract in.y from vertex.y because more Y means less index in array */
     const vec2_t rel = {
-        .x = in.x - orig.x,
-        .y = orig.y - in.y,
+        .x = in.x - vertex.x,
+        .y = vertex.y - in.y,
     };
 
     /* Rotate ralative */
     vec2_t ret = rotate(rad_ang, rel);
 
     /* Convert back to real array index */
-    ret.x = orig.x + ret.x;
-    ret.y = orig.y - ret.y;
+    ret.x = vertex.x + ret.x;
+    ret.y = vertex.y - ret.y;
 
     /* Clamp to make sure we are in array */
     ret.x = CLAMP(ret.x, 0, MAX_X);
