@@ -68,20 +68,19 @@ void bresenham_line(vec2_t a, vec2_t b) {
 #define DRAW_ANGLE_STEP DEG2RAD(1.f)
 
 void draw_angle(float deg, vec2_t vertex, vec2_t ang_center) {
-    deg /= 2;
-
     /* Start and end points of our angle */
-    vec2_t start = rotate_rel(DEG2RAD(-deg), vertex, ang_center);
-    vec2_t end   = rotate_rel(DEG2RAD(deg), vertex, ang_center);
+    vec2_t start = rotate_rel(DEG2RAD(-(deg / 2)), vertex, ang_center);
 
-    /* Current point we are drawing, last drawn and rotated ammount in radians
-     * since we started.  */
-    vec2_t cur    = start;
-    vec2_t prev   = start;
-    float rotated = 0.f;
+    /* Ammount of radians we want to rotate */
+    const float target_rad = DEG2RAD(deg);
+
+    /* Current point we are drawing and last point we drawed */
+    vec2_t cur  = start;
+    vec2_t prev = start;
 
     /* Rotate until we reach the end */
-    do {
+    float rotated = 0.f;
+    while (rotated < target_rad) {
         /* Draw current line of the angle.
          * TODO: Draw rectangles to fill empty points */
         bresenham_line(vertex, cur);
@@ -94,5 +93,5 @@ void draw_angle(float deg, vec2_t vertex, vec2_t ang_center) {
 
         /* Save new point for comparing in the next iteration */
         prev = cur;
-    } while (prev.x != end.x || prev.y != end.y);
+    }
 }
