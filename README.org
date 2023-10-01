@@ -11,6 +11,8 @@
 The program currently uses raycasting to simulate lightning in a two-dimensional
 plane.
 
+https://github.com/8dcc/raycasting/assets/29655971/0ca582f2-7f6b-4145-a824-5fc7dae4db4f
+
 #+begin_quote
 *Note:* This project is still work in progress.
 #+end_quote
