@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 #include "include/main.h"
-#include "include/bresenham.h"
+#include "include/draw.h"
 #include "include/raycast.h"
 #include "include/rotation.h"
 
