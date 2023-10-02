@@ -1,6 +1,6 @@
 /**
- * @file      bresenham.c
- * @brief     Functions for drawing lines with the bresenham line algorithm
+ * @file      draw.c
+ * @brief     Functions for drawing with the bresenham line algorithm
  * @author    8dcc
  */
 
@@ -10,8 +10,11 @@
 #include "include/raycast.h"
 #include "include/rotation.h"
 
-/* Used by draw_angle() and modified by draw_raycast_angle() wrapper */
-drawfunc_t draw_line = bresenham_line;
+/* Used by draw_angle() and modified by the draw_raycast_angle() inline wrapper
+ * in bresenham.h */
+drawfunc_t fnDrawLine = &draw_line;
+
+/*----------------------------------------------------------------------------*/
 
 static void bresenham_x(vec2_t a, vec2_t b, color_t col) {
     int dx = b.x - a.x;
@@ -53,7 +56,7 @@ static void bresenham_y(vec2_t a, vec2_t b, color_t col) {
     }
 }
 
-void bresenham_line(vec2_t a, vec2_t b, color_t col) {
+void draw_line(vec2_t a, vec2_t b, color_t col) {
     if (ABS(b.y - a.y) < ABS(b.x - a.x)) {
         if (b.x >= a.x)
             bresenham_x(a, b, col);
@@ -69,7 +72,7 @@ void bresenham_line(vec2_t a, vec2_t b, color_t col) {
 
 void draw_raycast(vec2_t start, vec2_t end, color_t col) {
     vec2_t cast = raycast(start, end);
-    bresenham_line(start, cast, col);
+    draw_line(start, cast, col);
 }
 
 #define DRAW_ANGLE_STEP DEG2RAD(0.1f)
@@ -88,11 +91,12 @@ void draw_angle(float deg, vec2_t vertex, vec2_t ang_center, color_t col) {
     /* Rotate until we reach the end */
     float rotated = 0.f;
     while (rotated < target_rad) {
-        /* FIXME: Remove gaps between lines */
-        /* Draw current line of the angle.
-         * NOTE: draw_line is a function pointer set in bresenham.h and modified
-         * temporarily by draw_raycast_angle() */
-        draw_line(vertex, cur, col);
+        /* FIXME: Remove gaps between lines
+         * NOTE: fnDrawLine is a function pointer set in bresenham.h and
+         * modified temporarily by draw_raycast_angle()
+         *
+         * Draw current line of the angle. */
+        fnDrawLine(vertex, cur, col);
 
         /* Rotate by STEP until we get a different point */
         while (cur.x == prev.x && cur.y == prev.y) {
