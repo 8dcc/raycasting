@@ -47,4 +47,18 @@ static inline void set_val(int y, int x, color_t val) {
     arr[y * ARR_W + x] = val;
 }
 
+/**
+ * @brief Get a value inside the global array
+ * @param[in] y, x Position
+ * @return Value at the specified position
+ */
+static inline color_t get_val(int y, int x) {
+#ifdef DEBUG
+    if (y >= ARR_H || x >= ARR_W)
+        fprintf(stderr, "get_val: Reading out of bounds (%d, %d)\n", y, x);
+#endif
+
+    return arr[y * ARR_W + x];
+}
+
 #endif /* MAIN_H_ */
